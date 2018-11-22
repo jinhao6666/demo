@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>videocanvas demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="blank">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content="xx,xx,xx" />
+    <meta name="description" content="yyyyyyy" />
+    <!-- <link href="images/title.ico" type="image/x-icon" rel="shortcut icon"/> -->
+    <link rel="stylesheet" href="./reset.css">
+    <style>
+        .click{
+            padding:20px;
+            text-align:center;
+            font-size:20px;
+            color:#FFF;
+            background:#000;
+        }
+        .play{
+            display:none;
+            width:100vw;
+            height:100vh;
+            /*padding-top:40%;*/
+            background:rgba(0,0,0,0.5);
+            position:fixed;
+            top:0;
+        }
+        .mask{
+            width:100vw;
+            height:100vh;
+            position:absolute;
+            top:0;
+        }
+        video{
+            /*display:none;*/
+            /*position:relative;;
+            z-index:0;*/
+            display:inline-block;
+            width:100%;
+            object-fit:fill;
+            margin:0;
+            padding:0;
+        }
+        p{
+            width:100px;
+            height:100px;
+            background:red;
+        }
+        img{
+            width:100%;
+        }
+        canvas{
+            display:block;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="click" data-url="https://miniprogramobs.lynkco.com/07c2fd20-7131-4c25-80b3-d4918837bed6">按钮</div>
+        <div class="play">
+            <div class="mask"></div>
+            <p></p>
+            <!-- <video x-webkit-airplay="allow" webkit-playsinline="true" src="" x5-video-player-type="h5" x5-video-player-fullscreen="true" playsinline="true"></video> -->
+            <video autoplay muted webkit-playsinline="true" x5-video-player-type="h5" x-webkit-airplay="allow" x5-video-player-fullscreen="true" src=""playsinline="true"></video>
+            <canvas>不支持canvas</canvas>
+            <img src="./factory.png" alt="">
+        </div>
+    </div>
+    <script src="./faskclick.js"></script>
+    <script src="./flexible.js"></script>
+    <script src="./jquery.1.11.3.min.js"></script>
+    <script>
+        $('.mask').click(function(e){
+            e.stopPropagation();
+            $('.play').hide();
+        })
+         console.log(window)
+        var dpr=window.devicePixelRatio;
+        var width=window.innerWidth*dpr;
+        var video=$('video')[0];
+        var img = $("img")[0];
+        var c = document.getElementsByTagName("canvas")[0];
+        $('canvas').attr('width',width)
+        ctx = c.getContext('2d');
+        $('.click').click(function(){
+            $('.play').show();
+            $('video').attr('src',$(this).attr('data-url'))
+            $('video')[0].addEventListener("durationchange", function(){
+                $('canvas').attr('height',$('img').height()*dpr);
+                $('p').html($('video').height());
+                $('video')[0].play();             
+              })
+        })
+         //每20毫秒画一次图
+         video.addEventListener('play', function() {
+            var width=window.innerWidth*dpr;
+            var height=$('video').height()*dpr;
+            console.log(width,height)
+            var i = window.setInterval(function() {
+                $('canvas').attr('height',$('img').height()*dpr);
+                ctx.drawImage(video,0,0,width,height);
+                 //打印当前视频的播放时间
+                 // console.log(v.currentTime);
+                 //当视频结束的时候去掉循环
+                 if(video.ended){
+                    clearInterval(i)
+                }
+            }, 20);
+         }, false);
+
+        //总结
+        //小米默认浏览器上根本就不显示，控件也去不掉，微信浏览器上也没啥用，但是在qq浏览器还是起作用的，还有火狐浏览器（对移动版的火狐浏览器上）也是不显示，这就是大坑，
+        //微信有白边，处理方法就是将video成inlin-block，不要成块，全屏高的话可以忽略应该，
+        //还有video的播放必须要有autoplay和muted标签，不然浏览器不认识，js控制播放作用不是特别大，也可能是我在缓冲时候播放所以没播放，方正最好加上，
+    </script>  
+</body>
+</html>
