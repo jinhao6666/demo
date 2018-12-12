@@ -1,0 +1,15 @@
+<!--pages/homepage/homepage.wxml-->
+<view class='container1 {{iphonex?"ispagephonex":""}}'>
+  <view class='swiperwrap'>
+    <swiper class='swiper-box' circular="true" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="#FFF" interval="{{interval}}" current='{{swiperindex}}' duration="{{duration}}" indicator-dots="true">
+      <block wx:for="{{lunboimg}}" wx:key="index">
+        <swiper-item>
+          <view style='width:100%;height:100%'>
+            <image src="{{item}}" class="slide-image" mode='widthFix' />
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view>主要是swiper下边的点是css进行改变得，详情请看css</view>
+  </view>
+</view>

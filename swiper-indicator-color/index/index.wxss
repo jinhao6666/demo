@@ -1,0 +1,74 @@
+/* pages/homepage/homepage.wxss */
+page{
+  /* background-color: #0D0D0D; */
+}
+.container1 {
+  overflow:hidden;
+}
+.swiperwrap{
+  width:100%;
+  position: relative;
+  overflow:hidden;
+}
+.swiper-box {
+  display:block;
+  /* height:976rpx; */
+  height:600rpx;
+  /* height: 112.8vh; */
+  background-color: #000;
+  position:relative;
+}
+
+.slide-image {
+  display:block;
+  height: 100%;
+  width: 100%;
+}
+.homepage_button{
+  display: flex;
+  width:100%;
+  /* justify-content:space-around; */
+  justify-content:center;
+  position:absolute;
+  bottom:130rpx;
+  z-index:10;
+}
+.slide-icon {
+  width: 210rpx;
+  height:80rpx;
+  line-height:80rpx;
+  margin-right:60rpx;
+  text-align:center;
+  font-size:26rpx;
+  color: #F44459;
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
+.slide-icon:last-child{
+  margin-right:0;
+}
+.swiper-box .wx-swiper-dots.wx-swiper-dots-horizontal {
+  position: absolute;
+  bottom: 50rpx
+}
+
+.swiper-box .wx-swiper-dot {
+  /* width: 50rpx; */
+  display: inline-flex;
+  width:6rpx;
+  height: 16rpx;
+  justify-content: space-between;
+}
+
+.swiper-box .wx-swiper-dot::before {
+  content: '';
+  flex-grow: 1;
+  background:#868686;
+  border-radius: 8rpx;
+}
+
+.swiper-box .wx-swiper-dot-active::before {
+  height:30rpx;
+  /* background:#FFF; */
+  background:#000;
+}
