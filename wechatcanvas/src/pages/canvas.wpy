@@ -1,0 +1,441 @@
+<style lang="less">
+	.draw1{
+		margin-top:30px;
+	}
+	.canvas{
+		width:0;
+		height:0;
+		overflow:hidden;
+		// position:absolute;
+		// left:1000px;
+	}
+	.down{
+		margin:20px 0;
+	}
+</style>
+<template>
+	<view wx-if="{{userbol}}" class="draw1">你还没有授权请点击授权</view>
+	<button wx-if="{{userbol}}" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">获取用户信息</button>
+    <!-- canvas -->
+    <view class="{{overflow?'canvas':''}}" ><canvas style="width:{{cWidth}}px; height:{{cHeight}}px;" canvas-id="firstCanvas"></canvas></view>
+	<view class="down"  wx-if="{{!photobol}}" @tap="down">下载海报</view>
+	<view wx-if="{{photobol}}" @tap="sqphoto">开启相册授权</view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class canvas extends wepy.page{
+	config = {
+      navigationBarTitleText: 'index'
+	}
+	data = {
+		title:'122',
+		cWidth:375,
+		cHeight:660,
+		userInfo:{},
+		userbol:false,
+		photobol:false,
+		canvaspath:'',
+		imgUrls: [
+			'http://vgc.nttdata.com.cn/Content/image/sharewxbg.png',
+			'https://miniprogramobs.lynkco.com/ecf6f091-bd41-445f-916e-8a79f3b59ebe',
+			'/img/1.png',
+			'/img/demo.jpg'
+		],
+		imgUrlslocal:[],
+		text:{
+			tit:'世界多美好，你怎么这样',
+			con:'你看这个世界怎么了乐乐乐，我觉得还可以呀，你说对吧是的，我觉得，嗯嗯不错嗯嗯不错'
+		},
+		imgfilenum:0,
+		failnum:0,
+		timetext:'',
+		overflow:true,
+	}
+
+
+	
+	methods = {
+		down(){
+			var that=this;
+			wepy.showLoading({
+				title: '生成中',
+			})
+			wepy.getSetting({
+				success(res) {
+					console.log(21321321);
+					if (res.authSetting['scope.writePhotosAlbum']) {
+						that.getcanvasAll();
+						console.log(1231312);
+					}else{
+						console.log(12312321);
+						that.photobol=true;
+						that.$apply();
+					}
+				}
+			})
+		},
+		sqphoto(){
+			var that=this;
+			wepy.openSetting({
+				success(res) {
+					console.log(res,1231);
+					if(res.authSetting['scope.writePhotosAlbum']){
+						that.photobol=false;
+						that.$apply();
+					}
+				}
+			})
+		},
+		onGotUserInfo(e) {
+			this.userInfo=e.detail.userInfo;
+			this.userbol=false;
+			this.imgUrls.push(e.detail.userInfo.avatarUrl)
+			this.$apply();
+			this.getcanvasAll()
+		}
+	}
+	//获取时间
+	getTime(){
+		var date=new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		var day = date.getDate();
+		console.log(date,year,month,day)
+		var time=[year,month,day].map(formatNumber).join('-');
+		this.timetext=time+'向你推荐一个咨询';
+		this.$apply();
+		function formatNumber(n){
+			n = n.toString()
+			return n[1] ? n : '0' + n
+		}
+	}
+	//获取本地地址
+	getImgFile(opt){
+		var that=this;
+		this.imgfilenum++;
+		this.$apply();
+		wepy.getImageInfo({
+			src: opt.src,//服务器返回的图片地址
+			success: function (res) {
+				console.log(res);
+				//res.path是网络图片的本地地址
+				this.imgfilenum=0;
+				that.$apply();
+				opt.callSuccess(res);
+			},
+			fail: function (res) {
+				//失败回调
+				if(that.imgfilenum>2){
+					console.log('失败',res);
+				}else{
+					that.getImgFile(opt);
+				}
+			}
+		});
+	}
+	//canvas下的需要处理的数据
+	getcanvasAll(){
+		var that=this;
+		var imgUrlsindex=0;
+		this.getTime();
+		function call(res){
+			// that.imgUrlslocal[imgUrlsindex]=res.path;
+			var ress={
+				path:res.path,
+				width:res.width,
+				height:res.height,
+				aspectRatio:res.height/res.width
+			}
+			that.imgUrlslocal.push(ress);
+			imgUrlsindex++;
+			that.$apply();
+			if(that.imgUrlslocal.length==that.imgUrls.length){
+				that.draw();
+				console.log(that)
+				return false;
+			}
+			that.getImgFile({
+				src:that.imgUrls[imgUrlsindex],
+				callSuccess:function(res){
+					call(res)
+				}
+			})
+		};
+		that.getImgFile({
+			src:that.imgUrls[imgUrlsindex],
+			callSuccess:function(res){
+				call(res)
+			}
+		})
+	}
+	//绘制文字
+	drawtxt(ctx,text,fontsize,lineh,color,x,y,maxwid){
+		var t1=text;
+		ctx.setFontSize(fontsize)
+		ctx.setFillStyle(color);
+		//获取文字总长度
+		var metrics = ctx.measureText(t1)
+		//计算需要几行
+		var line=metrics.width/maxwid;
+		line=line<=1?1:line;
+		//获取一行最多字数
+		var maxfnum=Math.floor(t1.length/line);
+		for(var i=0,j=0;i<line;i++){
+			var a1=t1.slice(j,j+maxfnum);
+			j+=maxfnum;
+			ctx.fillText(a1,x,y+i*(fontsize+lineh),maxwid)
+		}
+	}
+	//绘制圆角的矩形
+	drawrectangle(ctx,rectangle){
+		var r=rectangle.r;
+		var x=rectangle.x;
+		var y=rectangle.y;
+		var w=rectangle.w;
+		var h=rectangle.h;
+		ctx.save();
+		ctx.beginPath();
+		ctx.setFillStyle(rectangle.color);
+		ctx.setLineWidth(rectangle.bw)
+		ctx.setStrokeStyle(rectangle.bcolor);
+		//左上圆(备)
+		ctx.arc(x+r,y+r,r, Math.PI, 1.5 * Math.PI);
+		//top
+		// ctx.moveTo(x+r,y);
+		ctx.lineTo(x+w-2*r,y);
+		ctx.stroke();
+
+		//右上圆(备)
+		ctx.arc(x+w-r,y+r,r, 1.5 * Math.PI, 2 * Math.PI);
+		// ctx.arcTo(x+w,y,x+w,y+r,r);
+		// //right
+		ctx.lineTo(x+w,y+h-2*r);
+		ctx.stroke();
+
+		//右下圆(备)
+		ctx.arc(x+w-r,y+h-r,r, 0, 0.5 * Math.PI);
+		// ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+		// //bottom
+		ctx.lineTo(x+r,y+h);
+		ctx.stroke();
+
+		//左下圆(备)
+		ctx.arc(x+r,y+h-r,r, 0.5 * Math.PI, Math.PI);
+		// ctx.arcTo(x,y+h,x,y+h-r,r);
+		//left
+		ctx.lineTo(x,y+r);
+		//左上圆
+		// ctx.arcTo(x,y,x+r,y,r);
+
+		ctx.stroke();
+
+		ctx.fill();
+		ctx.clip();
+		if(rectangle.attr){rectangle.attr();}
+		ctx.restore();
+	}
+	draw(){
+		var that=this;
+		var ctx = wepy.createCanvasContext('firstCanvas');
+		var cwidth=that.cWidth;
+		var cheight=that.cHeight;
+		var borderra=10;
+		//背景
+		// ctx.drawImage(this.imgUrlslocal[0],0,0,375,660);
+		ctx.drawImage(this.imgUrlslocal[0].path,0,0,cwidth,cheight);
+		//圆角矩形
+		// that.drawrectangle(ctx,10,15,15,cwidth-30,cheight-30,1,'#FFF','#FFF');
+		that.drawrectangle(ctx,{
+			r:10,
+			x:15,
+			y:15,
+			w:cwidth-30,
+			h:cheight-30,
+			bw:1,
+			bcolor:'rgba(0,0,0,0)',
+			color:'#FFF'
+			// color:'#000'
+		});
+		//圆角矩形另一种写法（不能控制圆角大小）
+		/* 
+		//白框不能调整圆角度数
+		ctx.setLineWidth(10)
+		ctx.setLineJoin('round');
+		ctx.setStrokeStyle('#FFF');
+		// ctx.strokeRect(20,20,335,620);
+		ctx.strokeRect(20,20,cwidth-40,cheight-40);
+		//白底
+		ctx.setFillStyle('#FFF');
+		// ctx.setFillStyle('#000');
+		// ctx.fillRect(25,25,325,610);
+		ctx.fillRect(25,25,cwidth-50,cheight-50);
+		 */
+		
+		
+		//顶部图片
+		// ctx.drawImage(this.imgUrlslocal[1],25,25,325,181);
+		var img1height=(cwidth-50)*this.imgUrlslocal[1].aspectRatio;
+		// ctx.drawImage(this.imgUrlslocal[1].path,25,25,cwidth-50,img1height);
+		that.drawrectangle(ctx,{
+			r:10,
+			x:25,
+			y:25,
+			w:cwidth-50,
+			h:img1height,
+			bw:0,
+			bcolor:'rgba(0,0,0,0)',
+			color:'#FFF',
+			attr:function(){
+				ctx.drawImage(that.imgUrlslocal[1].path,25,25,cwidth-50,img1height);
+			}
+		});
+		//内容限定
+		var xdleft=35;
+		//绘制标题文字
+		// this.drawtxt(ctx,this.text.tit,20,4,'#000',25,260,320);
+		var fonth1=img1height+xdleft+44;
+		this.drawtxt(ctx,this.text.tit,20,4,'#000',xdleft,fonth1,cwidth-xdleft*2);
+
+		//印章		
+		// ctx.drawImage('/img/1.png',250,156,100,100);
+		ctx.drawImage(`/${this.imgUrlslocal[2].path}`,cwidth-100-25,25+img1height-50,100,100);
+		//绘制内容文字		
+		// this.drawtxt(ctx,this.text.con,16,6,'#777',25,320,320);
+		this.drawtxt(ctx,this.text.con,16,6,'#777',xdleft,fonth1+40,cwidth-xdleft*2);
+		
+		//分割线
+		ctx.beginPath();
+		ctx.setStrokeStyle('#000');
+		// ctx.setStrokeStyle('#FFF');
+		ctx.setLineWidth(1);
+		// ctx.moveTo(25, 470);
+		// ctx.lineTo(350, 470);
+		var lineh1=cheight-120-xdleft-xdleft;
+		ctx.moveTo(xdleft,lineh1);
+		ctx.lineTo(cwidth-xdleft,lineh1);
+		ctx.stroke();
+
+		//绘制品牌文字
+		// this.drawtxt(ctx,'豪大大',16,6,'#777',25,510,320);
+		this.drawtxt(ctx,'豪大大',16,6,'#777',xdleft,lineh1+30,cwidth-xdleft*2);
+		//绘制圆形头像
+		var circleh1=cheight-25-28-40;
+		ctx.save();
+		ctx.beginPath();
+		// ctx.arc(53,576,26, 0, 2 * Math.PI);
+		ctx.arc(xdleft+28+1,circleh1,26, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.clip();	
+		// ctx.drawImage(this.imgUrlslocal[3],27,550,52,52);		
+		ctx.drawImage(this.imgUrlslocal[4].path,xdleft+3,circleh1-26,52,52);		
+		ctx.restore();
+		
+		//画个空心圆
+		ctx.beginPath();
+		// ctx.arc(53,576,28,0, 2 * Math.PI,false);
+		ctx.arc(xdleft+28+1,circleh1,28,0, 2 * Math.PI,false);
+		ctx.lineWidth=1;
+		ctx.strokeStyle="green";
+		ctx.stroke();//画空心圆
+		ctx.closePath();
+		//绘制用户名字
+		this.drawtxt(ctx,this.userInfo.nickName,16,6,'#777',100,circleh1+4,cwidth-xdleft*2);
+		// this.drawtxt(ctx,this.userInfo.nickName,16,6,'#777',100,580,320);
+		//绘制小程序码
+		// ctx.drawImage('/img/demo.jpg',230,510,120,120);
+		ctx.drawImage(`/${this.imgUrlslocal[3].path}`,cwidth-120-xdleft,cheight-120-25-15,120,120);
+		//绘制时间
+		this.drawtxt(ctx,this.timetext,12,6,'#777',xdleft,cheight-25-15,cwidth-xdleft*2);
+		// this.drawtxt(ctx,this.timetext,14,6,'#777',25,620,320);
+		
+		ctx.draw(true,function(res){
+			that.imgUrlslocal=[];
+			that.overflow=false,
+			that.$apply();
+			wepy.hideLoading();
+			return false;
+			if(res.errMsg=='drawCanvas:ok'){
+				console.log(11111111);
+				// setTimeout(function(){
+					wepy.canvasToTempFilePath({
+						x: 0,
+						y: 0,
+						// width: 375,
+						// height: 660,
+						// destWidth:1031,
+						// destHeight:1834,
+						width: that.cWidth,
+						height: that.cHeight,
+						destWidth:that.cWidth*3,
+						destHeight:that.cHeight*3,
+						canvasId: 'firstCanvas',
+						fileType:'jpg',
+						quality:1,
+						success(res) {
+							console.log(res.tempFilePath)
+							wepy.saveImageToPhotosAlbum({
+								filePath:res.tempFilePath,
+								success(res) {
+									console.log(res,'成功');
+									wepy.hideLoading();
+									that.imgUrlslocal=[];
+								},
+								fail(res){
+									wepy.hideLoading();
+									that.imgUrlslocal=[];
+									console.log(res,'失败1231321');
+								}
+							})
+						},
+						fail(res){
+							that.failnum++;
+							that.$apply();
+							if(that.failnum>3){
+								return false;
+							}
+							that.draw()
+							console.log(res,'dsadsadsadsadsa')
+						}
+					})
+				// },3000)
+			}
+		});
+
+		
+		
+	}
+	//生命周期函数
+    onLoad() {
+		var that=this;
+		console.log(this)
+		wepy.getSetting({
+          success(res) {
+            if (res.authSetting['scope.userInfo']) {
+				wx.getUserInfo({
+					success(res) {
+						that.userInfo=res.userInfo;
+						that.userbol=false;
+						that.imgUrls.push(res.userInfo.avatarUrl)
+						that.$apply();
+						that.getcanvasAll();
+					}
+				})
+            }else{
+				that.userbol=true;
+				that.$apply();
+			}
+          }
+		});
+		//获取可用屏幕宽高
+		wx.getSystemInfo({
+			success(res) {
+				that.cWidth=res.windowWidth;
+				that.cHeight=res.windowHeight;
+				that.$apply();
+				console.log(res,that.cWidth,that.cHeight)
+			}
+		})
+    }
+}
+</script>
+

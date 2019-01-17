@@ -1,0 +1,13 @@
+{
+  "description": "修改",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "wx479ccb1c7c53e2df",
+  "projectname": "exceed",
+  "miniprogramRoot": "./dist"
+}
