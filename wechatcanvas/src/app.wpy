@@ -35,6 +35,7 @@ export default class extends wepy.app {
       navigationStyle:'custom'
     },
     tabBar: {
+      "custom": true,
     list: [
       {
         "pagePath": "pages/index",
@@ -53,7 +54,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    tabBarindex:0,
   }
 
   constructor () {

@@ -17,16 +17,22 @@
 	<view wx-if="{{userbol}}" class="draw1">你还没有授权请点击授权</view>
 	<button wx-if="{{userbol}}" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">获取用户信息</button>
     <!-- canvas -->
+	<image src="https://miniprogramobs.lynkco.com/ecf6f091-bd41-445f-916e-8a79f3b59ebe"></image>
     <view class="{{overflow?'canvas':''}}" ><canvas style="width:{{cWidth}}px; height:{{cHeight}}px;" canvas-id="firstCanvas"></canvas></view>
 	<view class="down"  wx-if="{{!photobol}}" @tap="down">下载海报</view>
 	<view wx-if="{{photobol}}" @tap="sqphoto">开启相册授权</view>
+	<tarbar></tarbar>
 </template>
 <script>
 import wepy from 'wepy'
+import tarbar from '../components/tarbar'
 export default class canvas extends wepy.page{
 	config = {
       navigationBarTitleText: 'index'
 	}
+	components = {
+      tarbar: tarbar
+    }
 	data = {
 		title:'122',
 		cWidth:375,
@@ -52,8 +58,6 @@ export default class canvas extends wepy.page{
 		overflow:true,
 	}
 
-
-	
 	methods = {
 		down(){
 			var that=this;
@@ -408,6 +412,7 @@ export default class canvas extends wepy.page{
     onLoad() {
 		var that=this;
 		console.log(this)
+		console.log(this,'aa2')
 		wepy.getSetting({
           success(res) {
             if (res.authSetting['scope.userInfo']) {

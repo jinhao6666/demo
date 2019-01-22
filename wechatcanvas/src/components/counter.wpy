@@ -83,5 +83,8 @@
         console.log(this.$name + ' minus tap')
       }
     }
+    onlLoad(){
+		console.log(this,'aa4')
+    }
   }
 </script>

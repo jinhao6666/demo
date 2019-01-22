@@ -1,0 +1,79 @@
+<style lang="less" scoped>
+	.tblist{
+		width:100%;
+		display:flex;
+		justify-content:space-around;
+		background:red;
+		position:fixed;
+		bottom:0;
+		z-index:100;
+		.tbitem{
+			font-size:18px;
+			text-align:center;
+			background:#000;
+			image{
+				display:block;
+				width:50px;
+				margin:0 auto;
+			}
+			text{
+				display:block;
+			}
+		}
+	}
+</style>
+<template>
+	<view class="tblist">
+		<repeat for="{{list}}"  key="index" index="index" item="item">
+			<view class="tbitem" data-path="{{item.path}}" data-index="{{index}}" @tap="switchTap">
+				<image mode="widthFix" src="{{selected==index?item.selectedimgsrc:item.imgsrc}}"></image>
+				<text style="color:{{selected==index?selectedcolor:color}}">{{item.text}}</text>
+			</view>
+		</repeat>
+	</view>
+</template>
+<script>
+
+import wepy from 'wepy'
+export default class tarbar extends wepy.component{
+	data={
+		selected:0,
+		color:'red',
+		selectedcolor:'yellow',
+		list:[
+			{
+				path:'/pages/canvas',
+				text:'canvas',
+				imgsrc:'/img/demo.jpg',
+				selectedimgsrc:'/img/1.png',
+			},
+			{
+				path:'/pages/index',
+				text:'index',
+				imgsrc:'/img/demo.jpg',
+				selectedimgsrc:'/img/1.png',
+			},
+			{
+				path:'/pages/logs',
+				text:'logo',
+				imgsrc:'/img/demo.jpg',
+				selectedimgsrc:'/img/1.png',
+			}
+		]
+	}
+	events={}
+	methods = {
+		switchTap(e){
+			var data=e.currentTarget.dataset;
+			wepy.switchTab({
+				url:data.path
+			})
+			wepy.$instance.globalData.tarBarindex=data.index;
+		}
+	}
+	onLoad () {
+		this.selected=wepy.$instance.globalData.tarBarindex;
+		this.$apply();
+    }
+}
+</script>

@@ -124,6 +124,7 @@
 
     <toast />
   </view>
+  <tarbar></tarbar>
 </template>
 
 <script>
@@ -136,7 +137,7 @@
   import Group from '../components/group'
   import Toast from 'wepy-com-toast'
   import testMixin from '../mixins/test'
-
+  import tarbar from '../components/tarbar'
   console.log('moduleA ignored: ', moduleA) // => moduleA ignored: {}
 
   @connect({
@@ -161,7 +162,8 @@
       counter2: Counter,
       list: List,
       group: Group,
-      toast: Toast
+      toast: Toast,
+      tarbar:tarbar
     }
     //混合
     mixins = [testMixin]
