@@ -118,7 +118,7 @@
 
     <toast />
   </view>
-  <tarbar></tarbar>
+  <tarbar title="1"></tarbar>
 
 </template>
 
@@ -287,7 +287,7 @@
     //生命周期函数
     onLoad() {
       let self = this
-		console.log(this,'aa3')
+		  console.log(this,'aa3')
 
       // this.$parent.getUserInfo(function (userInfo) {
         // if (userInfo) {
@@ -304,11 +304,14 @@
         self.$apply()
       // })
     }
+    onShow(){
+      console.log(122)
+    }
     onPullDownRefresh(){
       wx.stopPullDownRefresh()
     }
     onPageScroll(){
-      console.log(1111);
+      // console.log(1111);
     }
   }
 </script>

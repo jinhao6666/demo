@@ -62,6 +62,10 @@ export default class tarbar extends wepy.component{
 		]
 	}
 	events={}
+	props = {
+		title: String
+		// title: Number
+	};
 	methods = {
 		switchTap(e){
 			var data=e.currentTarget.dataset;
@@ -72,8 +76,9 @@ export default class tarbar extends wepy.component{
 		}
 	}
 	onLoad () {
-		this.selected=wepy.$instance.globalData.tarBarindex;
+		this.selected=this.title;
+		// this.selected=wepy.$instance.globalData.tarBarindex;
 		this.$apply();
-    }
+	}
 }
 </script>

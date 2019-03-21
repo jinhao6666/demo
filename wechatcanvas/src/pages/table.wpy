@@ -1,0 +1,190 @@
+<style lang="less">
+	.wrap{
+		.left{
+			float: left;
+			width:28%;
+			.leftc{
+				width:100vw;
+			}
+			.leftname{
+				display:inline-block;
+				width:28%;
+			}
+			.leftgg{
+				display:inline-block;
+				width:70%;
+				background:#CCC;
+				position: relative;
+				z-index:10;
+			}		
+		}
+		.right{
+			float:left;
+			width:70%;
+			overflow-x:auto;
+			.rightc{
+				width:450px;
+			}
+			.rlist{
+				display: inline-block;
+				width:100px;
+			}
+		}
+		.disc{
+			&::before{
+				content:"";
+				display:inline-block;
+				width:6px;
+				height:6px;
+				border:2px solid #000;
+				background:#000;
+				border-radius:50%;
+			}
+		}
+		.circle{
+			&::before{
+				content:"";
+				display:inline-block;
+				width:6px;
+				height:6px;
+				border:2px solid #000;
+				border-radius:50%;
+			}
+		}
+		.shortline{
+			&::before{
+				content:"";
+				display:inline-block;
+				width:10px;
+				height:2px;
+				background:#000;
+				vertical-align:middle;
+			}
+		}
+	}
+</style>
+<template>
+	<view class="wrap">
+		<scroll-view scroll-y="" @scroll="scroll1">111111111111111111111111111111111 11111111112222211
+
+			<view>12321321dshakjhdska的哈健康的撒谎看到啥叫看到啥健康的撒和健康大sssssssssssssss厦科技大厦空间</view>
+		</scroll-view>
+		<view class="left">
+			<view class="leftc">
+				<repeat for="{{table1}}"  key="index" index="index" item="item">
+					<view class="">
+						<text class="leftname">{{item.name}}</text>
+						<view class="leftgg" wx-if="{{item.gg}}">
+							<text class="disc">标准配备</text>
+							<text class="circle">选装配备</text>
+							<text class="shortline">未配备</text>
+						</view>
+					</view>
+					<repeat for="{{item.nr}}" key="nrindex" index="nrindex" item="nr">
+						<view>{{nr}}</view>
+					</repeat>
+				</repeat>
+			</view>
+		</view>
+		<view class="right">
+			<view class="rightc" bindtouchmove='touchmove'>
+				<repeat for="{{table}}"  key="index" index="index" item="item">
+					<view class="rlist">
+						<view>{{item.carxing}}</view>
+						<repeat for="{{item.jben}}"  key="" item="jben">
+							<!-- <view class="disc">{{jben}}</view>
+							<view class="circle">{{jben}}</view> -->
+							<view class="{{jben==1?'disc':jben==2?'circle':jben==3?'shortline':''}}">{{jben}}</view>
+						</repeat>
+						<view>1</view>
+						<repeat for="{{item.wbu}}"  key="" item="wbu">
+							<!-- <view>{{wbu}}</view> -->
+							<view class="{{wbu==1?'disc':wbu==2?'circle':wbu==3?'shortline':''}}"></view>
+						</repeat>
+						<view>1</view>
+						<repeat for="{{item.cnei}}"  key="" item="cnei">
+							<view class="{{cnei==1?'disc':cnei==2?'circle':cnei==3?'shortline':''}}"></view>
+						</repeat>
+						<view>1</view>
+						<repeat for="{{item.cz}}"  key="" item="cz">
+							<view class="{{cz==1?'disc':cz==2?'circle':cz==3?'shortline':''}}"></view>
+						</repeat>
+					</view>
+				</repeat>
+			</view>
+		</view>
+	</view>
+	<!-- <tarbar title="0"></tarbar> -->
+</template>
+<script>
+import wepy from 'wepy'
+import tarbar from '../components/tarbar'
+export default class table extends wepy.page{
+	config = {
+      navigationBarTitleText: 'table'
+	}
+	components = {
+      tarbar: tarbar
+    }
+	data = {
+		table1:[
+			{name:'基本',gg:false,nr:['基本车规1','基本车规2','基本车规3','基本车规4','基本车规5','基本车规6','基本车规7']},
+			{name:'外部',gg:true,nr:['外部1','外部2','外部3','外部4','外部5','外部6','外部7','外部8','外部9']},
+			{name:'内部',gg:true,nr:['内部1','内部2','内部3','内部4','内部5','内部6','内部7','内部8','内部9']},
+			{name:'车载',gg:true,nr:['车载1','车载2','车载3','车载4','车载5','车载6','车载7','车载8','车载9']}
+		],
+		table:[
+			{
+				carxing:'车1',
+				// jben:{gl:'100000',qg:'100',ry:'6.3',zcs:'500',jsd:'7',qc:'225',hc:'225'},
+				jben:{a1:'100000',a2:'100',a3:'6.3',a4:'500',a5:'7',a6:'225',a7:'225'},
+				wbu:{b1:1,b2:1,b3:2,b4:2,b5:2,b6:2,b7:2,b8:2,b9:2,},
+				cnei:{c1:1,c2:1,c3:2,c4:2,c5:2,c6:3,c7:2,c8:1,c9:3,},
+				cz:{d1:1,d2:1,d3:2,d4:2,d5:2,d6:3,d7:2,d8:1,d9:3,},
+			},
+			{
+				carxing:'车2',
+				// jben:{gl:'100000',qg:'100',ry:'6.3',zcs:'500',jsd:'7',qc:'225',hc:'225'},
+				jben:{a1:'100000',a2:'100',a3:'6.3',a4:'500',a5:'7',a6:'225',a7:'225'},
+				wbu:{b1:1,b2:1,b3:2,b4:2,b5:2,b6:2,b7:2,b8:2,b9:2,},
+				cnei:{c1:1,c2:1,c3:2,c4:2,c5:2,c6:3,c7:2,c8:1,c9:3,},
+				cz:{d1:1,d2:1,d3:2,d4:2,d5:2,d6:3,d7:2,d8:1,d9:3,},
+			},
+			{
+				carxing:'车3',
+				// jben:{gl:'100000',qg:'100',ry:'6.3',zcs:'500',jsd:'7',qc:'225',hc:'225'},
+				jben:{a1:'100000',a2:'100',a3:'6.3',a4:'500',a5:'7',a6:'225',a7:'225'},
+				wbu:{b1:1,b2:1,b3:2,b4:2,b5:2,b6:2,b7:2,b8:2,b9:2,},
+				cnei:{c1:1,c2:1,c3:2,c4:2,c5:2,c6:3,c7:2,c8:1,c9:3,},
+				cz:{d1:1,d2:1,d3:2,d4:2,d5:2,d6:3,d7:2,d8:1,d9:3,},
+			},
+			{
+				carxing:'车4',
+				// jben:{gl:'100000',qg:'100',ry:'6.3',zcs:'500',jsd:'7',qc:'225',hc:'225'},
+				jben:{a1:'100000',a2:'100',a3:'6.3',a4:'500',a5:'7',a6:'225',a7:'225'},
+				wbu:{b1:1,b2:1,b3:2,b4:2,b5:2,b6:2,b7:2,b8:2,b9:2,},
+				cnei:{c1:1,c2:1,c3:2,c4:2,c5:2,c6:3,c7:2,c8:1,c9:3,},
+				cz:{d1:1,d2:1,d3:2,d4:2,d5:2,d6:3,d7:2,d8:1,d9:3,},
+			}
+		]
+	}
+
+	methods = {
+		touchmove(e){
+			console.log(e.target.offsetLeft)
+		},
+		scroll1(){
+			console.log(1232421231);
+		}
+	}
+	//生命周期函数
+    onLoad() {
+		var that=this;
+		
+	}
+	onShow(){
+		console.log(1212);
+	}
+}
+</script>
+

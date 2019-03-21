@@ -24,7 +24,9 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/canvas',
+      'pages/table',
       'pages/index',
+      'pages/img360',
       'pages/logs'
     ],
     window: {
@@ -32,7 +34,6 @@ export default class extends wepy.app {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black',
-      navigationStyle:'custom'
     },
     tabBar: {
       "custom": true,

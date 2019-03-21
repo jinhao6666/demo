@@ -124,7 +124,7 @@
 
     <toast />
   </view>
-  <tarbar></tarbar>
+  <tarbar title="2"></tarbar>
 </template>
 
 <script>
@@ -288,14 +288,14 @@
     }
     //生命周期函数
     onLoad() {
-        console.log("logs.onload")
+      console.log("logs.onload")
       let self = this
-        self.normalTitle = '标题已被修改'
+        self.normalTitle = '标题已被修改';
 
-        self.setTimeoutTitle = '标题三秒后会被修改'
+        self.setTimeoutTitle = '标题三秒后会被修改';
         setTimeout(() => {
-          self.setTimeoutTitle = '到三秒了'
-          self.$apply()
+          self.setTimeoutTitle = '到三秒了';
+          self.$apply();
         }, 3000)
 
         self.$apply()

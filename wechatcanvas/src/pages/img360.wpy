@@ -1,0 +1,78 @@
+<style lang="less">
+</style>
+<template>
+	<view>img360</view>
+	<tarbar title="0"></tarbar>
+</template>
+<script>
+import wepy from 'wepy'
+import tarbar from '../components/tarbar'
+export default class extends wepy.page{
+	config = {
+      navigationBarTitleText: 'img360'
+	}
+	components = {
+      tarbar: tarbar
+    }
+	data = {
+		title:'122',
+		cWidth:375,
+		cHeight:660,
+		userInfo:{},
+		userbol:false,
+		photobol:false,
+		canvaspath:'',
+		imgUrls: [
+			'http://vgc.nttdata.com.cn/Content/image/sharewxbg.png',
+			'https://miniprogramobs.lynkco.com/ecf6f091-bd41-445f-916e-8a79f3b59ebe',
+			'/img/1.png',
+			'/img/demo.jpg'
+		],
+		imgUrlslocal:[],
+		text:{
+			tit:'世界多美好，你怎么这样',
+			con:'你看这个世界怎么了乐乐乐，我觉得还可以呀，你说对吧是的，我觉得，嗯嗯不错嗯嗯不错'
+		},
+		imgfilenum:0,
+		failnum:0,
+		timetext:'',
+		overflow:true,
+	}
+
+	methods = {
+	
+	}
+	//生命周期函数
+    onLoad() {
+		var that=this;
+		wepy.getSetting({
+          success(res) {
+            if (res.authSetting['scope.userInfo']) {
+				wx.getUserInfo({
+					success(res) {
+						that.userInfo=res.userInfo;
+						that.userbol=false;
+						that.$apply();
+					}
+				})
+            }else{
+				that.userbol=true;
+				that.$apply();
+			}
+          }
+		});
+		//获取可用屏幕宽高
+		wx.getSystemInfo({
+			success(res) {
+				that.cWidth=res.windowWidth;
+				that.cHeight=res.windowHeight;
+				that.$apply();
+			}
+		})
+	}
+	onShow(){
+		console.log(1212);
+	}
+}
+</script>
+

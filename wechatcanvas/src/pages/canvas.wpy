@@ -17,18 +17,17 @@
 	<view wx-if="{{userbol}}" class="draw1">你还没有授权请点击授权</view>
 	<button wx-if="{{userbol}}" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">获取用户信息</button>
     <!-- canvas -->
-	<image src="https://miniprogramobs.lynkco.com/ecf6f091-bd41-445f-916e-8a79f3b59ebe"></image>
     <view class="{{overflow?'canvas':''}}" ><canvas style="width:{{cWidth}}px; height:{{cHeight}}px;" canvas-id="firstCanvas"></canvas></view>
 	<view class="down"  wx-if="{{!photobol}}" @tap="down">下载海报</view>
 	<view wx-if="{{photobol}}" @tap="sqphoto">开启相册授权</view>
-	<tarbar></tarbar>
+	<tarbar title="0"></tarbar>
 </template>
 <script>
 import wepy from 'wepy'
 import tarbar from '../components/tarbar'
 export default class canvas extends wepy.page{
 	config = {
-      navigationBarTitleText: 'index'
+      navigationBarTitleText: 'canvas'
 	}
 	components = {
       tarbar: tarbar
@@ -440,7 +439,10 @@ export default class canvas extends wepy.page{
 				console.log(res,that.cWidth,that.cHeight)
 			}
 		})
-    }
+	}
+	onShow(){
+		console.log(1212);
+	}
 }
 </script>
 
