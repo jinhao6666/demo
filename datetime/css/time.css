@@ -1,0 +1,108 @@
+@import "iconfont.css";
+.dmrcd1detailr>div{
+	display:inline-block;
+	vertical-align: top;
+}
+.dmrcd1drdate{
+  width:150px;
+  padding:10px 30px 10px 16px;
+  font-size: 0;
+  border:2px solid #E3E3E3;
+  border-radius:4px;
+  background:#EBEFF0;
+  position:relative;
+}
+.dmrcd1drdate .dmrcd1drdatetime{
+    display:inline-block;
+    font-size:16px;
+    vertical-align:top;
+  }
+.dmrcd1drdate .dmrcd1drdataimg{
+    display:inline-block;
+    width:18px;
+    height:18px;
+    vertical-align:top;
+    position: absolute;
+    right:14px;
+}
+.dmrcd1drdate .dmrcd1drdataimg i{
+ 	font-size: 18px;
+ 	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+/*.dmrcd1drdate .dmrcd1drdataimg img{
+	display:block;
+	width: 100%;
+}*/
+
+
+
+.dmrcd1drdateline{
+  width:28px;
+  height:2px;
+  margin:0 9px;
+  margin-top:24px;
+  background:#EBEFF0;
+}
+
+
+
+.datetime{
+	display:none;
+	width: 300px;
+	text-align: center;
+	background:#FAFAFB;
+	position: absolute;
+	top:34px;
+	z-index:2;
+}
+.datetit{
+	padding:0;
+	height:24px;
+	line-height:24px;
+	font-size: 16px;
+	background: #ECEFF1;
+}
+.datetitval{
+	display:inline-block;
+	margin:0 10px;
+}
+.datel,dater{
+	margin-top:4px;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+.datecon{
+	padding-top: 16px;
+}
+.datecon>div{
+	padding-bottom:24px;
+	font-size: 0;
+}
+.datecon p{
+	display:inline-block;
+	width:42px;
+	//height:26px;
+	font-size: 12px;
+	text-align:center;
+	cursor:pointer;
+}
+.datecon span{
+  display:inline-block;
+  width: 24px;
+  height:24px;
+  line-height:26px;
+  border-radius:50%;
+}
+.datecon p:hover span{
+  color: #FFF;
+  background:#4A90E2;
+}
+.datecurr span{
+  color:#FFF;
+  background:#4A90E2;
+}

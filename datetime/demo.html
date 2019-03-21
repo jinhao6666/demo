@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>日历demo</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/time.css">
+	<link rel="stylesheet" href="css/demo.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="dmrcd1detailr">
+            <div class="dmrcd1drdate">
+                <div class="dmrcd1drdatetime" id="dmrcd1drdatetime1">2018-12-15</div>
+                <div class="dmrcd1drdataimg dmrcd1drdataimg1">
+                    <i class="icon-rili"></i>
+                </div>
+            </div>
+            <div class="dmrcd1drdateline"></div>
+            <div class="dmrcd1drdate">
+                <div class="dmrcd1drdatetime" id="dmrcd1drdatetime2">2018-12-15</div>
+                <div class="dmrcd1drdataimg dmrcd1drdataimg2">
+                    <i class="icon-rili"></i>
+                </div>
+            </div>
+        </div>
+	</div>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/time.js"></script>
+	<script>
+		var timeDate1 = new timeDate({
+	    date:'2019',
+	    ele:'.dmrcd1drdataimg1',
+	    valueobj:$('#dmrcd1drdatetime1'),
+	    callfunction:function(){
+	        // $(this)[0].zd=true;
+	        return false
+	        // console.log($(this))
+	        // console.log(111);
+	    },
+	    clickfunction:function(){
+	        console.log($('#dmrcd1drdatetime1').text());
+	    }
+	});
+	$('.dmrcd1drdataimg1').on('click',function(){
+	    timeDate1.toggledate(this);
+	})
+	</script>
+</body>
+</html>
