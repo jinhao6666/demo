@@ -29,22 +29,37 @@
 	<script src="js/time.js"></script>
 	<script>
 		var timeDate1 = new timeDate({
-	    date:'2019',
-	    ele:'.dmrcd1drdataimg1',
-	    valueobj:$('#dmrcd1drdatetime1'),
-	    callfunction:function(){
-	        // $(this)[0].zd=true;
-	        return false
-	        // console.log($(this))
-	        // console.log(111);
-	    },
-	    clickfunction:function(){
-	        console.log($('#dmrcd1drdatetime1').text());
-	    }
-	});
-	$('.dmrcd1drdataimg1').on('click',function(){
-	    timeDate1.toggledate(this);
-	})
+		    date:'2019',
+		    ele:'.dmrcd1drdataimg1',
+		    valueobj:$('#dmrcd1drdatetime1'),
+		    weekbol:false,
+		    selectprev:function(){
+		    	//选择前
+		    	timeDate1.opt.zd=true;//阻断继续进行
+		        return false
+		    },
+		    selectnext:function(){
+		    	//选择后
+		        console.log($('#dmrcd1drdatetime1').text());
+		    }
+		});
+		$('.dmrcd1drdataimg1').on('click',function(){
+		    timeDate1.toggledate(this);
+		})
+		var timeDate2 = new timeDate({
+		    ele:'.dmrcd1drdataimg2',
+		    valueobj:$('#dmrcd1drdatetime2'),
+		    selectprev:function(){
+		        return false
+		    },
+		    selectnext:function(){
+		        console.log($('#dmrcd1drdatetime2').text());
+		    }
+		});
+		$('.dmrcd1drdataimg2').on('click',function(){
+		    timeDate2.toggledate(this);
+		})
+
 	</script>
 </body>
 </html>

@@ -3,20 +3,28 @@
         var _this=this;
         // 判断是否是new timeDate 的  不是的话 帮他new一下
         // if (!(this instanceof timeDate)) return new timeDate(options);
+        var timecur=new Date();
         this.localValue={
-            zd:false
+            zd:false,
+            date:timecur,
+            weekbol:true,
         };
+        if(option.date){
+            option.date=new Date(option.date);            
+        }
         this.opt = this.extend(this.localValue, option, true)
-        this.datehtml='';
-        //判断是否标记处当前日期
-        this.datecurr=true;
         // 判断传进来的是DOM还是字符串
-
         this.opt.ele=this.checkStrObj(option.ele);
         this.opt.valueobj=this.checkStrObj(option.valueobj);
 
-        this.initDom();
-
+        // this.datehtml='';
+        //判断是否标记处当前日期
+        this.datecurr=true;
+        // this.initDom();
+        //初始化valueobj的值
+        var newDate=this.getDate(this.opt.date);
+        var time1=[newDate.y,newDate.m+1,newDate.d].map(_this.formatNumber).join('-');
+        $(this.opt.valueobj).html(time1);
         //绑定展开关闭事件
         // $(this.opt.ele).on('click',function(){
         //     _this.toggledate(this);
@@ -28,6 +36,11 @@
             this.datetime = document.createElement('div');
             this.datetime.className = 'datetime';
             this.opt.ele.appendChild(this.datetime);
+
+            //将日期进行拆分
+            this.opt.newDate=this.getDate(this.opt.date);
+            this.opt.changedate=this.opt.date;
+
 
             //添加头
             this.adddatetit();
@@ -86,12 +99,7 @@
         //添加表头
         adddatetit:function(){
             var _this=this;
-            //获取当前日期
-            var today=new Date();
-            if(this.opt.date){
-                today=new Date(this.opt.date);
-            }
-            var newDate=this.getDate(today);
+            var newDate=this.opt.newDate;
 
             this.datetit = document.createElement('div');
             this.datetit.className = 'datetit';
@@ -113,7 +121,7 @@
             this.datetit.appendChild(this.dateticonr);
 
             var time1=[newDate.y,newDate.m+1,newDate.d].map(_this.formatNumber).join('-');
-            $(this.valueobj).html(time1)
+            $(this.opt.valueobj).html(time1);
 
             var _this = this
             _this.dateticonl.onclick=function(e){
@@ -128,13 +136,15 @@
         //添加table
         addtable:function(){
             var _this=this;
-            //获取当前日期
-            var today=new Date();
-            if(this.opt.date){
-                today=new Date(this.opt.date);
+            //判断是不是当前选择的年月份
+            var curdate=_this.getDate(_this.opt.date); 
+            if(_this.opt.newDate.y==curdate.y&&_this.opt.newDate.m==curdate.m){
+                _this.datecurr=true;
+                _this.opt.newDate=_this.getDate(new Date(this.opt.date));
+            }else{
+                _this.datecurr=false;
             }
-
-            var newDate=this.getDate(today);
+            var newDate=this.opt.newDate;
 
             this.datecon = document.createElement('div');
             this.datecon.className = 'datecon';
@@ -179,6 +189,9 @@
         //添加星期天
         addweek:function(){
             var _this=this;
+            if(!_this.opt.weekbol){
+                return;
+            }
             var week=['日','一','二','三','四','五','六'];
             this.dateweek = document.createElement('div');
             this.dateweek.className = 'dateweek';
@@ -193,12 +206,9 @@
         //上月
         prevmonth:function(){
             var _this=this;
-            var today=new Date();
-            if(_this.opt.date){
-                today=new Date(_this.opt.date);
-            }
-            var newDate=_this.getDate(today);
 
+            var newDate=_this.opt.newDate;
+            
             var yearmonth='';
             if(newDate.m>0){
                 newDate.m-=1;
@@ -206,20 +216,17 @@
                 newDate.y-=1;
                 newDate.m=11;
             }
-            _this.opt.date=[newDate.y,newDate.m+1].map(_this.formatNumber).join('-');
+            // _this.opt.date
+            yearmonth=[newDate.y,newDate.m+1].map(_this.formatNumber).join('-');
+            _this.opt.newDate=_this.getDate(new Date(yearmonth));
             _this.datecon.remove();
-            $('.datetitval').html(_this.opt.date);
-            _this.datecurr=false;
+            $('.datetitval').html(yearmonth);
             _this.addtable();
         },
         //下月
         nextmonth:function(){
             var _this=this;
-            var today=new Date();
-            if(_this.opt.date){
-                today=new Date(_this.opt.date);
-            }
-            var newDate=_this.getDate(today);
+            var newDate=_this.opt.newDate;
             var yearmonth='';
             if(newDate.m<11){
                 newDate.m+=1;
@@ -227,17 +234,17 @@
                 newDate.y+=1;
                 newDate.m=0;
             }
-            _this.opt.date=[newDate.y,newDate.m+1].map(_this.formatNumber).join('-');
+            yearmonth=[newDate.y,newDate.m+1].map(_this.formatNumber).join('-');
+            _this.opt.newDate=_this.getDate(new Date(yearmonth));
             _this.datecon.remove();
-            $('.datetitval').html(_this.opt.date);
-            _this.datecurr=false;
+            $('.datetitval').html(yearmonth);
             _this.addtable();
         },
         //选择日期
         selectdate:function(ele){
             var _this=this;
-            if(_this.opt.callfunction){
-                _this.opt.callfunction();
+            if(_this.opt.selectprev){
+                _this.opt.selectprev();
                 if(_this.opt.zd){
                     return false;
                 }
@@ -246,17 +253,21 @@
             $(ele).addClass('datecurr');
             var valuetext=$('.datetitval').html();
             valuetext=valuetext+'-'+[$(ele).text()].map(_this.formatNumber);
+            _this.opt.date=new Date(valuetext);
             $(_this.opt.valueobj).html(valuetext);
-            if(_this.opt.clickfunction){
-                _this.opt.clickfunction();
+            if(_this.opt.selectnext){
+                _this.opt.selectnext();
             }
         },
         toggledate:function(ele){
-            if($(ele).find('.datetime').css('display')=='none'){
-                $('.datetime').hide();
+            var _this=this;
+            if($(ele).find('.datetime').length==0){
+                $('.datetime').remove();
+                _this.datecurr=true;
+                _this.initDom();
                 $(ele).find('.datetime').show()
             }else{
-                $(ele).find('.datetime').hide()
+                $('.datetime').remove();
             }
         }
     }

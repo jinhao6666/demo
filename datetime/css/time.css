@@ -76,6 +76,16 @@
 	-ms-user-select:none;
 	user-select:none;
 }
+.dateweek{
+	padding-top:10px;
+	font-size:16px;
+}
+.dateweek>div{
+	display:inline-block;
+	width:42px;
+	text-align:center;
+	cursor:pointer;
+}
 .datecon{
 	padding-top: 16px;
 }
